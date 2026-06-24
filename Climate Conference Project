@@ -1,0 +1,31 @@
+Climate Conference Project
+Database: https://www.db-fiddle.com/f/pxMci1sLL945KHKYvpe9W6/1
+
+--Displays each VIP's first name, last name, and the name and type of the event they are presenting at.
+SELECT vip.first_name, vip.last_name, event.event_name, event.event_type
+FROM vips AS vip JOIN events AS event ON event.event_id = vip.event;
+
+--Displays all VIPs and their hotel Name and those that don't have a reservation.
+SELECT vip.first_name AS First, vip.last_name AS Last,hot.hotel_name AS Hotel_name
+FROM vips AS vip LEFT JOIN reservations AS res ON vip.member_id = res.member_id LEFT JOIN hotels AS hot ON res.hotel = hot.hotel_id;
+
+--Shows which VIP is providing feedback to another VIP. 
+SELECT reviewer.first_name AS Reviewer, receiver.first_name AS Receiving_Feedback
+FROM vips AS reviewer JOIN vips AS receiver ON reviewer.provides_feedback_to = receiver.member_id;
+
+--Finds all VIPs whose membership length is greater than the average membership length of all VIPs.
+SELECT vips.first_name, vips.last_name, 2026-vips.member_since AS years
+FROM vips
+WHERE (2026-vips.member_since) >
+(SELECT AVG(2026-vips.member_since)
+FROM vips);
+
+--Counts how many VIPs are presenting each type of event.
+SELECT events.event_type AS EVENTS, COUNT(events.event_type) AS Number
+FROM vips JOIN events ON vips.event = events.event_id 
+GROUP BY events.event_type;
+
+--Lists all VIPs who RSVP'd "Yes" to both the welcome party and the thank-you dinner.
+SELECT vips.first_name || ' '|| vips.last_name AS V_VIPS
+FROM vips JOIN reservations AS res ON vips.member_id = res.member_id 
+WHERE res.welcome_rsvp = 1 AND res.welcome_rsvp = 1;
