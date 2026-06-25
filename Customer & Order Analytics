@@ -40,3 +40,30 @@ GROUP BY Product;
 --7. How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
 SELECT COUNT(acctnum), AVG(price*Quantity) FROM customers JOIN FebSales ON customers.order_id = FebSales.orderID
 WHERE length(orderID) = 6 AND orderID <> 'Order ID' AND Quantity > 2;
+
+--8. How many of each type of headphone were sold in February?
+SELECT Product, SUM(Quantity) AS Amount
+FROM FebSales 
+WHERE length(orderID) = 6 AND orderID <> 'Order ID' and Product LIKE '%headphones%'
+GROUP BY Product;
+
+--9. What was the average amount spent for all of the accounts in February?
+SELECT sum(quantity*price)/count(acctnum) AS Avg_Spent
+FROM FebSales JOIN customers on FebSales.orderID = customers.order_id 
+WHERE length(orderID) = 6 AND orderID <> 'Order ID';
+
+--10. Find order ids from Georgia (GA) where the order has an average price greater than $1,000. Only find orders from dates beginning with ‘04/1’. 
+    
+SELECT orderID
+FROM AprSales
+WHERE length(orderID) = 6 AND orderID <> 'Order ID' and location LIKE '%GA _____'  AND orderdate LIKE '04/1%'
+GROUP BY orderID 
+HAVING AVG(price*Quantity) > 1000;
+
+--11.Which product brought in the most revenue in January and how much revenue did it bring in total?
+SELECT Product, SUM(price*Quantity) AS Revenue
+FROM JanSales
+WHERE length(orderID) = 6 AND orderID <> 'Order ID'
+GROUP BY Product
+ORDER BY Revenue DESC
+LIMIT 1;
